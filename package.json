@@ -1,0 +1,9 @@
+{
+	"name": "Dung",
+	"description": "Dungeons",
+	"copyright": "Copyright © 2015, anders",
+	"authors": ["anders"],
+	"dependencies": {
+	},
+	"libs": ["allegro", "allegro_primitives", "allegro_image", "allegro_font", "allegro_ttf", "allegro_color"]
+}
