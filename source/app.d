@@ -105,6 +105,11 @@ int main(char[][] args) {
 							player.Position = Vector2(player.Position.x, to!int(player.Position.y)+player.Radius);
 							player.Velocity = Vector2(player.Velocity.x, 0);
 						}
+						Corner_collision(Vector2(1, 1), player, dungeon);
+						Corner_collision(Vector2(-1, 1), player, dungeon);
+						Corner_collision(Vector2(-1, -1), player, dungeon);
+						Corner_collision(Vector2(1, -1), player, dungeon);
+
 						camera_offset = player.Position*scale - resolution/2;
 						break;
 					}
@@ -120,4 +125,15 @@ int main(char[][] args) {
 
 		return 0;
 	});
+}
+
+void Corner_collision(Vector2 corner, ref Unit unit, Dungeon dungeon) {
+	auto zcorner = Vector2(corner.x, corner.y);
+	if(zcorner.x<0)zcorner.x=0;
+	if(zcorner.y<0)zcorner.y=0;
+	auto c = Vector2(to!int(unit.Position.x)+zcorner.x, to!int(unit.Position.y)+zcorner.y);
+	auto v = c-unit.Position;
+	if(dungeon.Carved(unit.Position+corner) == false && v.Length < unit.Radius) {
+		unit.Position = c-v.Normalized*unit.Radius;
+	}
 }
