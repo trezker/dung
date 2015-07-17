@@ -80,7 +80,9 @@ struct Vector2 {
 
 	void Normalize() @property {
 		auto l = Length;
-		x = x/l;
-		y = y/l;
+		if(l > 0) {
+			x = x/l;
+			y = y/l;
+		}
 	}
 }
