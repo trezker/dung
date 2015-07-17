@@ -10,6 +10,8 @@ import allegro5.allegro_font;
 import allegro5.allegro_ttf;
 
 import dung.dungeon;
+import dung.unit;
+import dung.vector2;
 
 int main(char[][] args) {
 	return al_run_allegro({
@@ -35,6 +37,14 @@ int main(char[][] args) {
 
 		Dungeon dungeon = new Dungeon;
 		dungeon.Init();
+
+		Unit player = new Unit;
+		player.Radius = 0.5;
+		Vector2 pos = dungeon.Get_spawn_point();
+		player.Position = pos;
+		writeln(player.Position);
+		player.Color = ALLEGRO_COLOR(0, 0, 1, 1);
+		float scale = 10;
 
 		bool exit = false;
 		while(!exit)
@@ -76,7 +86,8 @@ int main(char[][] args) {
 				}
 			}
 
-			dungeon.Draw();
+			dungeon.Draw(scale);
+			player.Draw(scale);
 			al_flip_display();
 			al_clear_to_color(ALLEGRO_COLOR(0.5, 0.25, 0.125, 1));
 		}

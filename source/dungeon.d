@@ -42,6 +42,7 @@ class Dungeon {
 				Create_maze(x, y);
 			}
 		}
+		region++;
 		Create_connections();
 		Remove_dead_ends();
 	}
@@ -82,7 +83,7 @@ class Dungeon {
 				}
 				if(conreg == 0)
 					continue;
-				tiles[x][y].connection = true;
+				//tiles[x][y].connection = true;
 				connections[conreg] ~= Vector2(x, y);
 			}
 		}
@@ -186,20 +187,29 @@ class Dungeon {
 		}
 	}
 	
-	void Draw() {
+	void Draw(float scale) {
 		auto white = ALLEGRO_COLOR(1, 1, 1, 1);
 		auto black = ALLEGRO_COLOR(0, 0, 0, 1);
 		auto red = ALLEGRO_COLOR(1, 0, 0, 1);
 		foreach(x; 0..(width)) {
 			foreach(y; 0..(height)) {
-				auto cx = x*10+5;
-				auto cy = y*10+5;
+				auto cx = x*scale;
+				auto cy = y*scale;
 				auto color = black;
 				if(tiles[x][y].open)
 					color = white;
-				al_draw_filled_rectangle(cx, cy, cx+10, cy+10, color);
+				al_draw_filled_rectangle(cx, cy, cx+scale, cy+scale, color);
 				if(tiles[x][y].connection)
-					al_draw_filled_circle(cx+5, cy+5, 4, red);
+					al_draw_filled_circle(cx+scale/2, cy+scale/2, scale/2, red);
+			}
+		}
+	}
+	
+	Vector2 Get_spawn_point() {
+		while(true) {
+			auto p = Vector2(uniform(1, width-1), uniform(1, height-1));
+			if(Carved(p)) {
+				return p+Vector2(0.5, 0.5);
 			}
 		}
 	}

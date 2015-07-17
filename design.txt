@@ -1,0 +1,10 @@
+Create player.
+Put player in random location that is room or corridor.
+
+Attempt to create a number of monsters.
+Any room or corridor not of the same region as the player.
+
+Monsters move toward player.
+If monster touches player, you lose.
+Player can shoot monsters.
+Win when all monsters are dead.
