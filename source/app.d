@@ -89,6 +89,22 @@ int main(char[][] args) {
 					{
 						control.Update(0.02);
 						player.Update(0.02);
+						if(dungeon.Carved(player.Position+Vector2(player.Radius, 0)) == false) {
+							player.Position = Vector2(to!int(player.Position.x)+1-player.Radius, player.Position.y);
+							player.Velocity = Vector2(0, player.Velocity.y);
+						}
+						if(dungeon.Carved(player.Position-Vector2(player.Radius, 0)) == false) {
+							player.Position = Vector2(to!int(player.Position.x)+player.Radius, player.Position.y);
+							player.Velocity = Vector2(0, player.Velocity.y);
+						}
+						if(dungeon.Carved(player.Position+Vector2(0, player.Radius)) == false) {
+							player.Position = Vector2(player.Position.x, to!int(player.Position.y)+1-player.Radius);
+							player.Velocity = Vector2(player.Velocity.x, 0);
+						}
+						if(dungeon.Carved(player.Position-Vector2(0, player.Radius)) == false) {
+							player.Position = Vector2(player.Position.x, to!int(player.Position.y)+player.Radius);
+							player.Velocity = Vector2(player.Velocity.x, 0);
+						}
 						camera_offset = player.Position*scale - resolution/2;
 						break;
 					}
