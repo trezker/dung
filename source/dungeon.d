@@ -187,14 +187,14 @@ class Dungeon {
 		}
 	}
 	
-	void Draw(float scale) {
+	void Draw(float scale, Vector2 camera_offset) {
 		auto white = ALLEGRO_COLOR(1, 1, 1, 1);
 		auto black = ALLEGRO_COLOR(0, 0, 0, 1);
 		auto red = ALLEGRO_COLOR(1, 0, 0, 1);
 		foreach(x; 0..(width)) {
 			foreach(y; 0..(height)) {
-				auto cx = x*scale;
-				auto cy = y*scale;
+				auto cx = x*scale-camera_offset.x;
+				auto cy = y*scale-camera_offset.y;
 				auto color = black;
 				if(tiles[x][y].open)
 					color = white;

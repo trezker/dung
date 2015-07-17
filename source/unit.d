@@ -20,8 +20,8 @@ class Unit  {
 	double rad;
 	ALLEGRO_COLOR color = ALLEGRO_COLOR(1, 0, 0, 1);
 	
-	void Draw(float scale) {
-		al_draw_filled_circle(pos.x*scale, pos.y*scale, rad*scale, color);
+	void Draw(float scale, Vector2 camera_offset) {
+		al_draw_filled_circle(pos.x*scale - camera_offset.x, pos.y*scale - camera_offset.y, rad*scale, color);
 	}
 
 	void Update(double dt) {

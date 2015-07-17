@@ -1,6 +1,7 @@
 module dung.app;
 
 import std.stdio;
+import std.conv;
 
 import allegro5.allegro;
 import allegro5.allegro_primitives;
@@ -11,88 +12,15 @@ import allegro5.allegro_ttf;
 
 import dung.dungeon;
 import dung.unit;
+import dung.unit_control;
 import dung.vector2;
-
-class Unit_control {
-	Unit unit;
-	bool move_up = false;
-	bool move_down = false;
-	bool move_left = false;
-	bool move_right = false;
-public:
-	void Subject(Unit u) @property {
-		unit = u;
-	}
-	
-	Unit Subject() @property {
-		return unit;
-	}
-
-	bool Consume_event(ALLEGRO_EVENT event) {
-		switch(event.type) {
-			case ALLEGRO_EVENT_KEY_DOWN: {
-				switch(event.keyboard.keycode) {
-					case ALLEGRO_KEY_UP: {
-						move_up = true;
-						break;
-					}
-					case ALLEGRO_KEY_DOWN: {
-						move_down = true;
-						break;
-					}
-					case ALLEGRO_KEY_LEFT: {
-						move_left = true;
-						break;
-					}
-					case ALLEGRO_KEY_RIGHT: {
-						move_right = true;
-						break;
-					}
-					default:
-				}
-				break;
-			}
-			case ALLEGRO_EVENT_KEY_UP: {
-				switch(event.keyboard.keycode) {
-					case ALLEGRO_KEY_UP: {
-						move_up = false;
-						break;
-					}
-					case ALLEGRO_KEY_DOWN: {
-						move_down = false;
-						break;
-					}
-					case ALLEGRO_KEY_LEFT: {
-						move_left = false;
-						break;
-					}
-					case ALLEGRO_KEY_RIGHT: {
-						move_right = false;
-						break;
-					}
-					default:
-				}
-				break;
-			}
-			default:
-		}
-		return false;
-	}
-	
-	void Update(float dt) {
-		Vector2 v;
-		v += Vector2(move_right, move_down);
-		v -= Vector2(move_left, move_up);
-		v.Normalize();
-		unit.Velocity = unit.Velocity + v * dt;
-	}
-};
 
 int main(char[][] args) {
 	return al_run_allegro({
 		al_init();
 		
-		ALLEGRO_DISPLAY* display = al_create_display(800, 600);
+		Vector2 resolution = Vector2(800, 600);
+		ALLEGRO_DISPLAY* display = al_create_display(to!int(resolution.x), to!int(resolution.y));
 
 		al_install_keyboard();
 		al_install_mouse();
@@ -114,15 +42,16 @@ int main(char[][] args) {
 		dungeon.Init();
 
 		Unit player = new Unit;
-		player.Radius = 0.5;
+		player.Radius = 0.2;
 		Vector2 pos = dungeon.Get_spawn_point();
 		player.Position = pos;
-		writeln(player.Position);
 		player.Color = ALLEGRO_COLOR(0, 0, 1, 1);
-		float scale = 10;
+		float scale = 64;
 		
 		Unit_control control = new Unit_control;
 		control.Subject = player;
+
+		Vector2 camera_offset;
 
 		bool exit = false;
 		while(!exit)
@@ -160,14 +89,15 @@ int main(char[][] args) {
 					{
 						control.Update(0.02);
 						player.Update(0.02);
+						camera_offset = player.Position*scale - resolution/2;
 						break;
 					}
 					default:
 				}
 			}
 
-			dungeon.Draw(scale);
-			player.Draw(scale);
+			dungeon.Draw(scale, camera_offset);
+			player.Draw(scale, camera_offset);
 			al_flip_display();
 			al_clear_to_color(ALLEGRO_COLOR(0.5, 0.25, 0.125, 1));
 		}
