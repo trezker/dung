@@ -128,6 +128,7 @@ int main(char[][] args) {
 }
 
 void Corner_collision(Vector2 corner, ref Unit unit, Dungeon dungeon) {
+	//TODO: Make it only push out in the axis of least velocity, see if that feels better
 	auto zcorner = Vector2(corner.x, corner.y);
 	if(zcorner.x<0)zcorner.x=0;
 	if(zcorner.y<0)zcorner.y=0;

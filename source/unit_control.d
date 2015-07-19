@@ -72,10 +72,23 @@ public:
 	}
 	
 	void Update(float dt) {
+		double acc = 5;
+		double friction = 5;
 		Vector2 v;
 		v += Vector2(move_right, move_down);
 		v -= Vector2(move_left, move_up);
-		v.Normalize();
-		unit.Velocity = unit.Velocity + v * dt;
+		if(v.Length > 0) {
+			v.Normalize();
+			unit.Velocity = unit.Velocity + v * acc * dt;
+		}
+		else if(unit.Velocity.Length > 0) {
+			double l = unit.Velocity.Length;
+			double nl = l-friction*dt;
+			if(nl<0) {
+				unit.Velocity = Vector2(0, 0);
+			}
+			double f = nl/l;
+			unit.Velocity = unit.Velocity * f;
+		}
 	}
 };
