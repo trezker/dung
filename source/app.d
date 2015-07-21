@@ -89,27 +89,7 @@ int main(char[][] args) {
 					{
 						control.Update(0.02);
 						player.Update(0.02);
-						if(dungeon.Carved(player.Position+Vector2(player.Radius, 0)) == false) {
-							player.Position = Vector2(to!int(player.Position.x)+1-player.Radius, player.Position.y);
-							player.Velocity = Vector2(0, player.Velocity.y);
-						}
-						if(dungeon.Carved(player.Position-Vector2(player.Radius, 0)) == false) {
-							player.Position = Vector2(to!int(player.Position.x)+player.Radius, player.Position.y);
-							player.Velocity = Vector2(0, player.Velocity.y);
-						}
-						if(dungeon.Carved(player.Position+Vector2(0, player.Radius)) == false) {
-							player.Position = Vector2(player.Position.x, to!int(player.Position.y)+1-player.Radius);
-							player.Velocity = Vector2(player.Velocity.x, 0);
-						}
-						if(dungeon.Carved(player.Position-Vector2(0, player.Radius)) == false) {
-							player.Position = Vector2(player.Position.x, to!int(player.Position.y)+player.Radius);
-							player.Velocity = Vector2(player.Velocity.x, 0);
-						}
-						Corner_collision(Vector2(1, 1), player, dungeon);
-						Corner_collision(Vector2(-1, 1), player, dungeon);
-						Corner_collision(Vector2(-1, -1), player, dungeon);
-						Corner_collision(Vector2(1, -1), player, dungeon);
-
+						Dungeon_collission(player, dungeon);
 						camera_offset = player.Position*scale - resolution/2;
 						break;
 					}
@@ -128,7 +108,6 @@ int main(char[][] args) {
 }
 
 void Corner_collision(Vector2 corner, ref Unit unit, Dungeon dungeon) {
-	//TODO: Make it only push out in the axis of least velocity, see if that feels better
 	auto zcorner = Vector2(corner.x, corner.y);
 	if(zcorner.x<0)zcorner.x=0;
 	if(zcorner.y<0)zcorner.y=0;
@@ -137,4 +116,27 @@ void Corner_collision(Vector2 corner, ref Unit unit, Dungeon dungeon) {
 	if(dungeon.Carved(unit.Position+corner) == false && v.Length < unit.Radius) {
 		unit.Position = c-v.Normalized*unit.Radius;
 	}
+}
+
+void Dungeon_collission(ref Unit unit, Dungeon dungeon) {
+	if(dungeon.Carved(unit.Position+Vector2(unit.Radius, 0)) == false) {
+		unit.Position = Vector2(to!int(unit.Position.x)+1-unit.Radius, unit.Position.y);
+		unit.Velocity = Vector2(0, unit.Velocity.y);
+	}
+	if(dungeon.Carved(unit.Position-Vector2(unit.Radius, 0)) == false) {
+		unit.Position = Vector2(to!int(unit.Position.x)+unit.Radius, unit.Position.y);
+		unit.Velocity = Vector2(0, unit.Velocity.y);
+	}
+	if(dungeon.Carved(unit.Position+Vector2(0, unit.Radius)) == false) {
+		unit.Position = Vector2(unit.Position.x, to!int(unit.Position.y)+1-unit.Radius);
+		unit.Velocity = Vector2(unit.Velocity.x, 0);
+	}
+	if(dungeon.Carved(unit.Position-Vector2(0, unit.Radius)) == false) {
+		unit.Position = Vector2(unit.Position.x, to!int(unit.Position.y)+unit.Radius);
+		unit.Velocity = Vector2(unit.Velocity.x, 0);
+	}
+	Corner_collision(Vector2(1, 1), unit, dungeon);
+	Corner_collision(Vector2(-1, 1), unit, dungeon);
+	Corner_collision(Vector2(-1, -1), unit, dungeon);
+	Corner_collision(Vector2(1, -1), unit, dungeon);
 }
